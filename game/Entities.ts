@@ -110,6 +110,7 @@ export class Player {
   }
 
   public takeDamage(amt: number) { this.health -= amt; }
+  public heal(amt: number) { this.health = Math.min(100, this.health + amt); }
 
   public tryShoot(callback: (x: number, y: number, tx: number, ty: number) => void, tx: number, ty: number) {
     const now = performance.now();
@@ -174,7 +175,6 @@ export class Enemy {
     this.color = type === EnemyType.CONSTRUCT ? COLORS.ENEMY_CONSTRUCT : 
                  type === EnemyType.SORCERER ? COLORS.ENEMY_SORCERER : COLORS.ENEMY_SHADOW;
     if (type === EnemyType.SHADOW) this.health = 50;
-    // Offset shot timers so multiple sorcerers don't fire at the exact same frame
     this.shotTimer = Math.random() * 1000;
   }
 
@@ -201,7 +201,6 @@ export class Enemy {
 
   public canShoot(speedMultiplier: number): boolean {
     if (this.type !== EnemyType.SORCERER) return false;
-    // Base interval is 2500ms, scaling down as score increases
     const interval = 2500 / speedMultiplier;
     if (this.shotTimer >= interval) {
       this.shotTimer = 0;
@@ -261,4 +260,41 @@ export class WindZone {
 export class MagicOrb {
   public radius: number = 15;
   constructor(public x: number, public y: number) {}
+}
+
+export class HealthOrb {
+  public radius: number = 18;
+  constructor(public x: number, public y: number) {}
+
+  public draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    
+    // Heart shape drawing logic
+    ctx.fillStyle = COLORS.HEALTH;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = COLORS.HEALTH;
+    
+    ctx.beginPath();
+    const topCurveHeight = this.radius * 0.3;
+    ctx.moveTo(0, topCurveHeight);
+    
+    // Left side of heart
+    ctx.bezierCurveTo(0, 0, -this.radius, 0, -this.radius, topCurveHeight);
+    ctx.bezierCurveTo(-this.radius, this.radius * 0.8, 0, this.radius, 0, this.radius * 1.5);
+    
+    // Right side of heart
+    ctx.bezierCurveTo(0, this.radius, this.radius, this.radius * 0.8, this.radius, topCurveHeight);
+    ctx.bezierCurveTo(this.radius, 0, 0, 0, 0, topCurveHeight);
+    
+    ctx.fill();
+    
+    // Add an inner shine for 3D effect
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.beginPath();
+    ctx.arc(-this.radius * 0.4, topCurveHeight * 0.5, this.radius * 0.2, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+  }
 }

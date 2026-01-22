@@ -17,6 +17,23 @@ const App: React.FC = () => {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
+  const gameStateRef = useRef<GameState>('menu');
+
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
+
+  const onGameOver = useCallback((finalScore: number) => {
+    if (gameStateRef.current === 'gameover') return;
+    
+    setGameState('gameover');
+    setScore(finalScore);
+    setHighScore(prev => Math.max(prev, finalScore));
+    
+    if (engineRef.current) {
+      engineRef.current.stop();
+    }
+  }, []);
 
   const startGame = useCallback(() => {
     setGameState('playing');
@@ -32,24 +49,25 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const onGameOver = useCallback((finalScore: number) => {
-    setGameState('gameover');
-    setScore(finalScore);
-    setHighScore(prev => Math.max(prev, finalScore));
-  }, []);
-
   useEffect(() => {
-    if (canvasRef.current && !engineRef.current) {
-      engineRef.current = new GameEngine(canvasRef.current, {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // 1. First set dimensions
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // 2. Then initialize engine
+    if (!engineRef.current) {
+      engineRef.current = new GameEngine(canvas, {
         onUpdate: (data) => {
+          if (gameStateRef.current !== 'playing') return;
           setScore(data.score);
           setHealth(data.health);
           setMana(data.mana);
           setCombo(data.combo);
           setMultiplier(data.multiplier);
-          if (data.health <= 0) {
-            onGameOver(data.score);
-          }
+          if (data.health <= 0) onGameOver(data.score);
         },
         onGameOver
       });
@@ -63,8 +81,6 @@ const App: React.FC = () => {
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize();
-
     return () => {
       window.removeEventListener('resize', handleResize);
       engineRef.current?.stop();
@@ -72,20 +88,11 @@ const App: React.FC = () => {
   }, [onGameOver]);
 
   return (
-    <div className="relative w-full h-screen bg-slate-950 overflow-hidden font-sans select-none">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-      />
+    <div className="relative w-full h-screen bg-slate-950 overflow-hidden font-sans select-none text-white">
+      <canvas ref={canvasRef} className="absolute inset-0 z-0" />
 
       {gameState === 'playing' && (
-        <HUD 
-          score={score} 
-          health={health} 
-          mana={mana} 
-          combo={combo}
-          multiplier={multiplier}
-        />
+        <HUD score={score} health={health} mana={mana} combo={combo} multiplier={multiplier} />
       )}
 
       {gameState === 'menu' && (
@@ -96,9 +103,8 @@ const App: React.FC = () => {
         <GameOver score={score} highScore={highScore} onRestart={startGame} />
       )}
 
-      {/* Control overlay hint for mobile/desktop */}
-      <div className="absolute bottom-4 left-4 text-xs text-slate-500 opacity-50 pointer-events-none hidden md:block">
-        WASD: Move | SPACE: Dash | SHIFT: Mana Boost | H: Hover | CLICK: Cast Spell
+      <div className="absolute bottom-4 left-4 text-[10px] text-slate-500 opacity-40 pointer-events-none hidden md:block uppercase tracking-widest">
+        WASD: Move • SPACE: Dash • SHIFT: Boost • H: Hover • CLICK: Spell
       </div>
     </div>
   );

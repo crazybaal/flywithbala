@@ -11,7 +11,7 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
-        background-color: #0f172a;
+        background-color: #020617;
         color: white;
         font-family: 'Inter', sans-serif;
       }
@@ -20,17 +20,21 @@
         touch-action: none;
       }
     </style>
-  <script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react/": "https://esm.sh/react@19.0.0/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
+    <!-- Explicitly load the entry point module -->
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>

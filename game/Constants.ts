@@ -18,8 +18,8 @@ export const GAME_SETTINGS = {
   TICK_RATE: 1000 / 60,
   INITIAL_HEALTH: 100,
   INITIAL_MANA: 100,
-  ENEMY_SPAWN_INTERVAL: 3200, // Starts significantly slower for a calm entry
-  SCALING_FACTOR: 0.00004,    // Half as fast as before for very gradual difficulty ramp
+  ENEMY_SPAWN_INTERVAL: 3200, 
+  SCALING_FACTOR: 0.00004,    
 };
 
 export const COLORS = {
@@ -30,6 +30,7 @@ export const COLORS = {
   PROJECTILE_PLAYER: '#7dd3fc',
   PROJECTILE_ENEMY: '#fb7185',
   ORB: '#fbbf24',
+  HEALTH: '#f43f5e',
   WIND: 'rgba(255, 255, 255, 0.05)',
   DANGER: '#ef4444',
   MANA: '#60a5fa',
