@@ -1,16 +1,17 @@
 
 export const PHYSICS = {
-  GRAVITY: 0.22,           
-  AIR_RESISTANCE: 0.96,    
-  LIFT_ACCEL: 0.9,         
-  HORIZ_ACCEL: 0.8,        
-  MAX_SPEED: 18,           
-  BOOST_MULTIPLIER: 1.8,   
-  DASH_FORCE: 12,          
-  DASH_COOLDOWN: 1000,      
-  HOVER_COST: 0.4,         
-  MANA_BOOST_COST: 0.6,    
-  MANA_REGEN: 0.2,
+  GRAVITY: 0.18,           
+  AIR_RESISTANCE: 0.95,    
+  LIFT_ACCEL: 0.85,         
+  HORIZ_ACCEL: 0.7,        
+  MAX_SPEED: 22,           
+  BOOST_MULTIPLIER: 2.2,   
+  DASH_FORCE: 15,          
+  DASH_COOLDOWN: 900,      
+  HOVER_COST: 0.3,         
+  MANA_BOOST_COST: 0.8,    
+  MANA_REGEN: 0.3,
+  CHARGE_SPEED: 0.02, // Progress per frame
 };
 
 export const GAME_SETTINGS = {
@@ -18,9 +19,9 @@ export const GAME_SETTINGS = {
   TICK_RATE: 1000 / 60,
   INITIAL_HEALTH: 100,
   INITIAL_MANA: 100,
-  ENEMY_SPAWN_INTERVAL: 1800, 
-  SCALING_FACTOR: 0.00005,
-  MISSION_TOTAL_DISTANCE: 15000, 
+  ENEMY_SPAWN_INTERVAL: 1600, 
+  SCALING_FACTOR: 0.00006,
+  MISSION_TOTAL_DISTANCE: 25000, 
 };
 
 export const COLORS = {
@@ -29,11 +30,15 @@ export const COLORS = {
   ENEMY_SORCERER: '#c084fc',
   ENEMY_SHADOW: '#475569',
   PROJECTILE_PLAYER: '#7dd3fc',
+  PROJECTILE_CHARGE: '#fde047',
   PROJECTILE_ENEMY: '#fb7185',
   ORB: '#fbbf24',
   HEALTH: '#f43f5e',
   WIND: 'rgba(255, 255, 255, 0.05)',
   DANGER: '#ef4444',
   MANA: '#60a5fa',
-  PLATFORM: '#334155',
+  PLATFORM: '#1e293b',
+  PARALLAX_1: '#020617',
+  PARALLAX_2: '#0f172a',
+  PARALLAX_3: '#1e293b',
 };

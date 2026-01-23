@@ -4,8 +4,8 @@ export type GameState = 'menu' | 'playing' | 'gameover' | 'victory';
 export interface Entity {
   x: number;
   y: number;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   vx: number;
   vy: number;
   radius: number;
