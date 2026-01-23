@@ -1,16 +1,16 @@
 
 export const PHYSICS = {
-  GRAVITY: 0.20,           
-  AIR_RESISTANCE: 0.95,    
+  GRAVITY: 0.22,           
+  AIR_RESISTANCE: 0.96,    
   LIFT_ACCEL: 0.9,         
-  HORIZ_ACCEL: 0.7,        
-  MAX_SPEED: 25,           
-  BOOST_MULTIPLIER: 2.0,   
-  DASH_FORCE: 28,          
-  DASH_COOLDOWN: 900,      
-  HOVER_COST: 0.7,         
-  MANA_BOOST_COST: 0.4,    
-  MANA_REGEN: 0.22,        
+  HORIZ_ACCEL: 0.8,        
+  MAX_SPEED: 18,           
+  BOOST_MULTIPLIER: 1.8,   
+  DASH_FORCE: 12,          
+  DASH_COOLDOWN: 1000,      
+  HOVER_COST: 0.4,         
+  MANA_BOOST_COST: 0.6,    
+  MANA_REGEN: 0.2,
 };
 
 export const GAME_SETTINGS = {
@@ -18,8 +18,9 @@ export const GAME_SETTINGS = {
   TICK_RATE: 1000 / 60,
   INITIAL_HEALTH: 100,
   INITIAL_MANA: 100,
-  ENEMY_SPAWN_INTERVAL: 3200, 
-  SCALING_FACTOR: 0.00004,    
+  ENEMY_SPAWN_INTERVAL: 1800, 
+  SCALING_FACTOR: 0.00005,
+  MISSION_TOTAL_DISTANCE: 15000, 
 };
 
 export const COLORS = {
@@ -34,5 +35,5 @@ export const COLORS = {
   WIND: 'rgba(255, 255, 255, 0.05)',
   DANGER: '#ef4444',
   MANA: '#60a5fa',
-  PLATFORM: '#334155'
+  PLATFORM: '#334155',
 };

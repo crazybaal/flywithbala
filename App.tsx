@@ -5,6 +5,7 @@ import { GameState } from './types';
 import HUD from './components/HUD';
 import Menu from './components/Menu';
 import GameOver from './components/GameOver';
+import Victory from './components/Victory';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>('menu');
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   const [mana, setMana] = useState(100);
   const [combo, setCombo] = useState(1);
   const [multiplier, setMultiplier] = useState(1);
+  const [progress, setProgress] = useState(0);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
@@ -24,15 +26,19 @@ const App: React.FC = () => {
   }, [gameState]);
 
   const onGameOver = useCallback((finalScore: number) => {
-    if (gameStateRef.current === 'gameover') return;
-    
+    if (gameStateRef.current !== 'playing') return;
     setGameState('gameover');
     setScore(finalScore);
     setHighScore(prev => Math.max(prev, finalScore));
-    
-    if (engineRef.current) {
-      engineRef.current.stop();
-    }
+    if (engineRef.current) engineRef.current.stop();
+  }, []);
+
+  const onVictory = useCallback((finalScore: number) => {
+    if (gameStateRef.current !== 'playing') return;
+    setGameState('victory');
+    setScore(finalScore);
+    setHighScore(prev => Math.max(prev, finalScore));
+    if (engineRef.current) engineRef.current.stop();
   }, []);
 
   const startGame = useCallback(() => {
@@ -42,6 +48,7 @@ const App: React.FC = () => {
     setMana(100);
     setCombo(0);
     setMultiplier(1);
+    setProgress(0);
     
     if (engineRef.current) {
       engineRef.current.reset();
@@ -53,11 +60,9 @@ const App: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // 1. First set dimensions
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // 2. Then initialize engine
     if (!engineRef.current) {
       engineRef.current = new GameEngine(canvas, {
         onUpdate: (data) => {
@@ -67,9 +72,10 @@ const App: React.FC = () => {
           setMana(data.mana);
           setCombo(data.combo);
           setMultiplier(data.multiplier);
-          if (data.health <= 0) onGameOver(data.score);
+          setProgress(data.progress);
         },
-        onGameOver
+        onGameOver,
+        onVictory
       });
     }
 
@@ -85,14 +91,21 @@ const App: React.FC = () => {
       window.removeEventListener('resize', handleResize);
       engineRef.current?.stop();
     };
-  }, [onGameOver]);
+  }, [onGameOver, onVictory]);
 
   return (
     <div className="relative w-full h-screen bg-slate-950 overflow-hidden font-sans select-none text-white">
       <canvas ref={canvasRef} className="absolute inset-0 z-0" />
 
       {gameState === 'playing' && (
-        <HUD score={score} health={health} mana={mana} combo={combo} multiplier={multiplier} />
+        <HUD 
+          score={score} 
+          health={health} 
+          mana={mana} 
+          combo={combo} 
+          multiplier={multiplier} 
+          progress={progress}
+        />
       )}
 
       {gameState === 'menu' && (
@@ -101,6 +114,10 @@ const App: React.FC = () => {
 
       {gameState === 'gameover' && (
         <GameOver score={score} highScore={highScore} onRestart={startGame} />
+      )}
+
+      {gameState === 'victory' && (
+        <Victory score={score} onRestart={startGame} />
       )}
 
       <div className="absolute bottom-4 left-4 text-[10px] text-slate-500 opacity-40 pointer-events-none hidden md:block uppercase tracking-widest">

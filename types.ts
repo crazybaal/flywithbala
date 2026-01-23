@@ -1,5 +1,5 @@
 
-export type GameState = 'menu' | 'playing' | 'gameover';
+export type GameState = 'menu' | 'playing' | 'gameover' | 'victory';
 
 export interface Entity {
   x: number;
@@ -18,11 +18,13 @@ export interface PlayerData {
   mana: number;
   combo: number;
   multiplier: number;
+  progress: number;
 }
 
 export interface GameEngineOptions {
   onUpdate: (data: PlayerData) => void;
   onGameOver: (score: number) => void;
+  onVictory: (score: number) => void;
 }
 
 export enum EnemyType {
